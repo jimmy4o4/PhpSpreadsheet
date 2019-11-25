@@ -281,6 +281,10 @@ class Worksheet extends BIFFwriter
     {
         $phpSheet = $this->phpSheet;
 
+        // Storing selected cells and active sheet because it changes while parsing cells with formulas.
+        $selectedCells = $this->phpSheet->getSelectedCells();
+        $activeSheetIndex = $this->phpSheet->getParent()->getActiveSheetIndex();
+
         // Write BOF record
         $this->storeBof(0x0010);
 
@@ -459,6 +463,9 @@ class Worksheet extends BIFFwriter
         // Append
         $this->writeMsoDrawing();
 
+        // Restoring active sheet.
+        $this->phpSheet->getParent()->setActiveSheetIndex($activeSheetIndex);
+
         // Write WINDOW2 record
         $this->writeWindow2();
 
@@ -470,6 +477,9 @@ class Worksheet extends BIFFwriter
         if ($phpSheet->getFreezePane()) {
             $this->writePanes();
         }
+
+        // Restoring selected cells.
+        $this->phpSheet->setSelectedCells($selectedCells);
 
         // Write SELECTION record
         $this->writeSelection();
