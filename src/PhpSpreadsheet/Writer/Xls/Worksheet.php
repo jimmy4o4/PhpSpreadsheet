@@ -1260,7 +1260,6 @@ class Worksheet extends BIFFwriter
         $fFrozenNoSplit = 0; // 0 - bit
         // no support in PhpSpreadsheet for selected sheet, therefore sheet is only selected if it is the active sheet
         $fSelected = ($this->phpSheet === $this->phpSheet->getParent()->getActiveSheet()) ? 1 : 0;
-        $fPaged = 1; // 2
         $fPageBreakPreview = $this->phpSheet->getSheetView()->getView() === SheetView::SHEETVIEW_PAGE_BREAK_PREVIEW;
 
         $grbit = $fDspFmla;
@@ -1272,8 +1271,8 @@ class Worksheet extends BIFFwriter
         $grbit |= $fArabic << 6;
         $grbit |= $fDspGuts << 7;
         $grbit |= $fFrozenNoSplit << 8;
-        $grbit |= $fSelected << 9;
-        $grbit |= $fPaged << 10;
+        $grbit |= $fSelected << 9; // Selected sheets.
+        $grbit |= $fSelected << 10; // Active sheet.
         $grbit |= $fPageBreakPreview << 11;
 
         $header = pack('vv', $record, $length);
